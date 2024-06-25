@@ -1,30 +1,29 @@
-const mongoose = require("mongoose");
+const Crypto = require("crypto");
 
-const Schema = mongoose.Schema;
+class Book {
+  /**
+   * Book Details
+   * @param {string} title
+   * @param {string} author
+   * @param {string} ISBN
+   */
 
-const BookSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-  },
+  constructor(title, author, ISBN) {
+    this.id = Crypto.randomUUID();
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+    this.borrowed = false;
+  }
 
-  author: {
-    type: String,
-    required: true,
-  },
+  /**
+   * Check if a book was borrowed
+   * @returns {boolean} - If borrowed True , if not False
+   * */
 
-  ISBN: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-
-  borrowed: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-const Book = mongoose.model("Book", BookSchema);
+  isBorrowed() {
+    return this.isBorrowed;
+  }
+}
 
 module.exports = Book;

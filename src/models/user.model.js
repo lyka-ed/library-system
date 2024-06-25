@@ -1,28 +1,36 @@
-const mongoose = require("mongoose");
+const Crypto = require("crypto");
 
-const Schema = mongoose.Schema;
+const Book = require("../models/book.model");
 
-const UserSchema = new Schema({
-  name: {
-    type: String,
-    trim: true,
-    required: true,
-  },
+class User {
+  /**
+   * Create User
+   * @param {string} name - user name in string
+   */
+  constructor(name) {
+    this.id = Crypto.randomUUID();
+    this.name = name;
+    this.borrowedBooks = [];
+  }
 
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+  /**
+   * Pick a book
+   * @param {ISBN}
+   * @return {Book}
+   */
+  peakBook(ISBN) {
+    const book = this.borrowedBooks.find((book) => book.ISBN === ISBN);
+  }
 
-  borrowedBooks: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Book",
-    },
-  ],
-});
-
-const User = mongoose.model("User", UserSchema);
+  /**
+   * Return a book
+   * @param {string} ISBN - isbn of the  book to be returned
+   */
+  returnBook(ISBN) {
+    this.borrowedBooks = this.borrowedBooks.filter(
+      (book) => book.ISBN !== ISBN
+    );
+  }
+}
 
 module.exports = User;

@@ -1,13 +1,41 @@
-const mongoose = require("mongoose");
+class Library {
+  constructor() {
+    this.books = [];
+    this.members = [];
+  }
+  /**
+   * Register a new user
+   * @param {User}
+   */
+  registerMembers(user) {
+    this.members.push(user);
+  }
 
-const Schema = mongoose.Schema;
+  /**
+   * Add new book
+   * @param {Book}
+   */
+  addNewBook(book) {
+    this.books.push(book);
+  }
 
-const LibrarySchema = new Schema({
-  books: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+  /**
+   * Borrow a book
+   * @param {User} user - name of user borrowing the book.
+   * @param {string} ISBN - ISBN of the borrowed book.
+   * @param {boolean} - True if the book was borrowed , False if it wasn't.
+   */
+  borrowBook(user, ISBN) {
+    const book = this.books.find((book) => book.ISBN === ISBN);
 
-  members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-});
+    if (!user?.borrowedBooks.includes(book) && book) {
+      book.borrowed = true;
+      user.borrowedBooks.push(book);
+      return true;
+    }
 
-const Library = mongoose.model("Library", LibrarySchema);
+    return false;
+  }
+}
 
 module.exports = Library;
